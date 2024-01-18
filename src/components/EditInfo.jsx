@@ -1,6 +1,10 @@
+
 import React, { useState, useEffect } from "react";
+import { useParams, Link, useNavigate } from "react-router-dom";
 
 const EditInfo = () => {
+  const { usuario } = useParams();
+  const navigate = useNavigate();
   const [userInfo, setUserInfo] = useState({
     primerNombre: "",
     segundoNombre: "",
@@ -9,6 +13,24 @@ const EditInfo = () => {
     usuario: "",
     password: "",
   });
+
+  useEffect(() => {
+    const token = localStorage.getItem("authToken");
+    fetch(`http://127.0.0.1:8000/api/getUserInfo/${usuario}`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setUserInfo(data);
+      })
+      .catch((error) => {
+        console.error("Error", error.message);
+        // Manejar el error según tu lógica
+      });
+  }, [usuario]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -22,7 +44,8 @@ const EditInfo = () => {
     const token = localStorage.getItem("authToken");
 
     try {
-      const response = await fetch("http://127.0.0.1:8000/api/updateUserInfo", {
+      console.log("userInfo:", userInfo);
+      const response = await fetch(`http://127.0.0.1:8000/api/updateUsuarioInfo/${usuario}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -36,6 +59,7 @@ const EditInfo = () => {
       }
 
       console.log("Información del usuario actualizada con éxito");
+      navigate("/personalInfo");
     } catch (error) {
       console.error("Error", error.message);
     }
@@ -109,6 +133,9 @@ const EditInfo = () => {
         className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 w-full"
       >
         Guardar Cambios
+        <Link to="/personalInfo" className="text-blue-500 hover:underline">
+        Regresar a PersonalInfo
+      </Link>
       </button>
     </div>
   );

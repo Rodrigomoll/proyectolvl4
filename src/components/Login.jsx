@@ -30,14 +30,13 @@ const Login = () => {
       console.log("Token de acceso", token);
 
       localStorage.setItem("authToken", token);
-      setLoginSuccess(true); // Establece el estado de inicio de sesión exitoso
+      setLoginSuccess(true); 
     } catch (error) {
       console.error("Error", error.message);
       setError(error.message);
     }
   };
 
-  // Si el inicio de sesión fue exitoso, renderiza el componente PersonalInfo
   if (loginSuccess) {
     return <PersonalInfo />;
   }
@@ -68,7 +67,6 @@ const Login = () => {
         onClick={handleLogin}
         className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 w-full"
       >
-        Iniciar Sesión
       </button>
     </div>
   );
